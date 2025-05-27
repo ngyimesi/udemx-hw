@@ -1,0 +1,25 @@
+services:
+  nginx:
+    image: nginx:1.27.5
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/certs:/etc/nginx/certs:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/content:/usr/share/nginx/html
+    ports:
+      - 80:80
+      - 443:443
+    restart: always
+  mariadb:
+    user: 0:0
+    image: mariadb:11.7.2-ubi9
+    environment:
+      - MARIADB_USER=udemx
+      - MARIADB_DATABASE=udemx-db
+      - MARIADB_PASSWORD=Alma1234
+      - MARIADB_ROOT_PASSWORD=Alma12345
+    volumes:
+      - ./mariadb:/var/lib/mysql:Z
+    ports: 
+      - 3306:3306
+    restart: always
