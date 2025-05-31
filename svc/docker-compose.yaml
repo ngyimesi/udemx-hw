@@ -19,7 +19,57 @@ services:
       - MARIADB_PASSWORD=Alma1234
       - MARIADB_ROOT_PASSWORD=Alma12345
     volumes:
-      - ./mariadb:/var/lib/mysql:Z
+      - mariadb-storage:/var/lib/mysql:Z
     ports: 
       - 3306:3306
     restart: always
+# This part is needed for the CI/CD task
+  jenkins-master:
+    build:
+      context: jenkins
+      dockerfile: Dockerfile 
+    restart: always
+    user: 0:0
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - ./jenkins/home:/var/jenkins_home:rw
+    environment:
+      - JENKINS_AGENT_NAME=agent-1
+      - JENKINS_AGENT_HOST=jenkins-worker
+      - JENKINS_AGENT_KEY=${JENKINS_AGENT_KEY}
+      - GITHUB_KEY=${GITHUB_KEY}
+  jenkins-worker:
+    build:
+      context: jenkins
+      dockerfile: agent.Dockerfile
+    init: true
+    restart: always
+    privileged: true
+    environment:
+      - JENKINS_AGENT_NAME=agent-1
+      - JENKINS_AGENT_SSH_PUBKEY=${JENKINS_AGENT_PUBKEY}
+    volumes:
+      - ./jenkins/daemon.json:/etc/docker/daemon.json:ro
+  registry-srv:
+    image: registry:3.0.0
+    restart: always
+    ports:
+      - 8081:5000
+    volumes:
+      - ./registry/storage:/var/lib/registry
+      - registry-storage:/etc/docker/registry/config.yml:ro
+    container_name: registry-srv
+  registry-ui:
+    image: joxit/docker-registry-ui:2.5.7-debian
+    restart: always
+    ports:
+      - 8088:80
+    environment:
+      - REGISTRY_TITLE=Docker Registry UI
+      - NGINX_PROXY_PASS_URL=http://registry-srv:5000
+      - DELETE_IMAGES=true
+volumes:
+  registry-storage:
+  mariadb-storage:

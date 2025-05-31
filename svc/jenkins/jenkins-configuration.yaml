@@ -1,0 +1,77 @@
+jenkins:
+  securityRealm:
+   local:
+    allowsSignup: false
+    users:
+      - id: admin
+        password: Alma1234
+  authorizationStrategy: loggedInUsersCanDoAnything
+  nodes:
+  - permanent:
+      launcher:
+        ssh:
+          credentialsId: "jenkins-key"
+          host: "jenkins-worker"
+          port: 22
+          sshHostKeyVerificationStrategy: "nonVerifyingKeyVerificationStrategy"
+      name: "agent-1"
+      numExecutors: 3
+      remoteFS: "/home/jenkins/agent"
+      retentionStrategy: "always"
+  numExecutors: 0
+security:
+  gitHostKeyVerificationConfiguration:
+    sshHostKeyVerificationStrategy: "acceptFirstConnectionStrategy"
+appearance:
+  locale:
+    allowUserPreferences: true
+    ignoreAcceptLanguage: true
+    systemLocale: "USE_BROWSER_LOCALE"
+  themeManager:
+    disableUserThemes: false
+    theme: "darkSystem"
+credentials:
+  system:
+    domainCredentials:
+    - credentials:
+      - basicSSHUserPrivateKey:
+          id: "jenkins-key"
+          privateKeySource:
+            directEntry:
+              privateKey: ${JENKINS_AGENT_KEY}
+          scope: GLOBAL
+          username: "jenkins"
+      - basicSSHUserPrivateKey:
+          id: "github-key"
+          privateKeySource:
+            directEntry:
+              privateKey: ${GITHUB_KEY}
+          scope: GLOBAL
+          username: "git"
+jobs:
+  - script: >
+      pipelineJob("hello-world") {
+        description()
+        keepDependencies(false)
+        definition {
+            cpsScm {
+                  scm {
+                    git {
+                       remote {
+                           github("ngyimesi/hello-udemx", "ssh")
+                           credentials("github-key")
+                          }
+                       branch("*/main")
+                    }
+                  }
+               scriptPath("Jenkinsfile")
+            }
+        }
+        disabled(false)
+        configure {
+             it / 'properties' / 'com.coravy.hudson.plugins.github.GithubProjectProperty' {
+                 'projectUrl'('git@github.com:ngyimesi/hello-udemx.git/')
+             displayName()
+           }
+         }
+       }
