@@ -58,8 +58,8 @@ services:
     ports:
       - 8081:5000
     volumes:
-      - ./registry/storage:/var/lib/registry
-      - registry-storage:/etc/docker/registry/config.yml:ro
+      - registry-storage:/var/lib/registry
+      - ./registry/config.yml:/etc/docker/registry/config.yml:ro
     container_name: registry-srv
   registry-ui:
     image: joxit/docker-registry-ui:2.5.7-debian
