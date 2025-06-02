@@ -45,6 +45,8 @@ services:
       context: jenkins
       dockerfile: agent.Dockerfile
     init: true
+    ports:
+      - 8089:8089
     restart: always
     privileged: true
     environment:
