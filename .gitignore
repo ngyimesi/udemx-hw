@@ -1,5 +1,5 @@
 secret/*
 .vagrant/*
-.ideavagra/*
+.idea/*
 jenkins/agent-key*
 jenkins/home/*
