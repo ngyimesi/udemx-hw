@@ -38,9 +38,9 @@
 
 - name: Add adoptium repository
   apt_repository:
-    repo: "deb arch={{ deb_architecture.stdout }}] https://packages.adoptium.net/artifactory/deb {{ distribution_release }} main"
+    repo: "deb [arch={{ deb_architecture.stdout }}] https://packages.adoptium.net/artifactory/deb {{ distribution_release }} main"
     state: present
-    filename: docker
+    filename: adoptium
 
 - name: Install required packages
   apt:
@@ -59,6 +59,7 @@
       - temurin-8-jdk
       - openjdk-11-jdk
       - git
+      - nginx
     state: present
     update_cache: true
 
@@ -67,4 +68,10 @@
     name: javac
     path: "/usr/lib/jvm/temurin-8-jdk-amd64/bin/javac"
     link: "/usr/bin/javac"
+
+- name: Ensure host nginx is disabled
+  systemd:
+    name: nginx
+    state: stopped
+    enabled: false
 

@@ -11,11 +11,9 @@ end
 config.vm.hostname = "UdemX-HW-automated"
   # Resize disk and change SSH port (pre-Ansible)
   config.vm.provision "shell", inline: <<-SHELL
-    set -euxi
+    set -eux
     sed -i 's/^#Port 22/Port 10022/' /etc/ssh/sshd_config
     sed -i 's/^#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
-    fdisk -l
-    ls -la /vagrant
     systemctl restart sshd
   SHELL
   #config.ssh.port = 10022
@@ -25,7 +23,6 @@ config.vm.hostname = "UdemX-HW-automated"
     ansible.playbook = "playbook.yml"
     ansible.compatibility_mode = "2.0"
     ansible.limit = "all"
-    ansible.verbose = "v"
     ansible.host_vars = {
        "UdemX_HW_automated" => {
           "ansible_port" => 10022

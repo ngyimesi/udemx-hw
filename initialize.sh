@@ -1,15 +1,10 @@
 #!/bin/sh
-mkdir -p secret
-if ! [ -f ./secret/github-key ]; then
-	ssh-keygen -t rsa -b 4096 -f ./secret/github-key -N ""
-	echo "Key generated successfully!"
-	echo "Add the following public key as trusted in your GitHub account:"
-	echo "----------------------------------------------------------------"
-	cat ./secret/github-key.pub
-	echo "----------------------------------------------------------------"
+DNF_CMD=$(which dnf)
+APT_GET_CMD=$(which apt-get)
+if [[ ! -z $YUM_CMD ]]; then
+    sudo dnf install -y ansible ansible-galaxy python3-passlib
+elif [[ ! -z $APT_GET_CMD ]]; then
+    sudo apt update
+    sudo apt install -y ansible ansible-galaxy python3-passlib
 fi
-echo "Key already exists."
-echo "Add the following public key as trusted in your GitHub account, if you haven't done already:"
-echo "-----------------------------------------------------"
-cat ./secret/github-key.pub
-echo "-----------------------------------------------------"
+

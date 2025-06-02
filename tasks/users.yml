@@ -8,7 +8,7 @@
     ssh_key_type: rsa
     ssh_key_bits: 4096
     ssh_key_passphrase: ""
-    ssh_key_file: "/root/id_rsa"
+    ssh_key_file: "/root/.ssh/id_rsa"
 
 - name: Create UdemX user
   user:

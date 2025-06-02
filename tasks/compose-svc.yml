@@ -6,12 +6,6 @@
     mode: 0755
 
 - name: Start docker composed services
-  shell: "/opt/svc/start.sh"
-
-- name: Get root SSH public key
-  command: cat /root/id_rsa.pub
-  register: ssh_key_out
-
-- name: Add this public ssh key to your GitHub account
-  debug:
-    msg: "{{ssh_key_out.stdout}}"
+  command:
+    cmd: "/opt/svc/start.sh"
+    chdir: "/opt/svc"

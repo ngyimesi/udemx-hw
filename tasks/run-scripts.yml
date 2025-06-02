@@ -1,0 +1,42 @@
+---
+- name: Copy scripts
+  copy:
+    src: scripts/
+    dest: /opt/scripts/
+    mode: 0755
+
+- name: Run last-3-modified script
+  command:
+    cmd: ./last-3-modified.sh
+    chdir: /opt/scripts
+
+- name: Run last-5-date script
+  command:
+    cmd: ./last-5-date.sh
+    chdir: /opt/scripts
+
+- name: Run loadavg script
+  command:
+    cmd: ./loadavg.sh
+    chdir: /opt/scripts
+
+- name: Run mariadb-dump script
+  command:
+    cmd: ./last-3-modified.sh
+    chdir: /opt/scripts
+
+- name: Run replace-title script
+  command:
+    cmd: ./replace-title.sh
+    chdir: /opt/scripts
+
+- name: Install cron job for mariadb-dump
+  cron:
+    name: "Backup mariadb every day at 2 a.m"
+    day: "*"
+    hour: 2
+    minute: 0
+    weekday: "*"
+    month: "*"
+    state: present
+    job: "/opt/scripts/mariadb-dump.sh"

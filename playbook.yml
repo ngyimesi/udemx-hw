@@ -16,5 +16,8 @@
       import_tasks: tasks/reboot.yml
     - name: Start composed services
       import_tasks: tasks/compose-svc.yml
-
+    - name: Run scripts
+      import_tasks: tasks/run-scripts.yml
+    - name: Print key
+      import_tasks: tasks/print-key.yml
 
