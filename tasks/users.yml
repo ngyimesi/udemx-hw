@@ -1,0 +1,31 @@
+---
+- name: Set root password
+  user:
+    name: root
+    password: "{{ 'Alma1234' | password_hash('sha512') }}"
+    state: present
+    generate_ssh_key: true
+    ssh_key_type: rsa
+    ssh_key_bits: 4096
+    ssh_key_passphrase: ""
+    ssh_key_file: "/root/id_rsa"
+
+- name: Create UdemX user
+  user:
+    name: udemx
+    home: "/opt/udemx"
+    create_home: true
+    state: present
+    groups:
+      - sudo
+      - docker
+    password: "{{ 'Alma1234' | password_hash('sha512') }}"
+
+- name: Create norbey user
+  user:
+    name: norbey
+    state: present
+    groups:
+      - sudo
+      - docker
+    password: "{{ 'Alma1234' | password_hash('sha512') }}"

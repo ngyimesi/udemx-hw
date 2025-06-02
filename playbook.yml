@@ -4,15 +4,17 @@
   become: yes
 
   tasks:
-    - name: Install essential tools
-      apt:
-        name: [curl, htop, vim, net-tools]
-        state: present
-        update_cache: yes
+    - name: Install updates
+      import_tasks: tasks/update.yml
+    - name: Install required packages
+      import_tasks: tasks/install-packages.yml
+    - name: Create users
+      import_tasks: tasks/users.yml
+    - name: Configure fail2ban
+      import_tasks: tasks/fail2ban.yml
+    - name: Reboot system
+      import_tasks: tasks/reboot.yml
+    - name: Start composed services
+      import_tasks: tasks/compose-svc.yml
 
-    - name: Create application directory
-      file:
-        path: /srv/app
-        state: directory
-        mode: '0755'
 

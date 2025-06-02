@@ -1,0 +1,13 @@
+[sshd]
+enabled = true
+port = 10022
+filter = sshd
+maxretry = 3
+bantime = 120
+
+[nginx-http-auth]
+enabled  = true
+port     = http,https
+logpath = %(nginx_error_log)s
+maxretry = 3
+bantime = 120

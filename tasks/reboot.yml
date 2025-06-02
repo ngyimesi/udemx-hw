@@ -1,0 +1,4 @@
+---
+- name: Reboot system after installations
+  reboot:
+    connect_timeout: 60
