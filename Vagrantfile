@@ -1,0 +1,35 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "generic/debian11"
+  config.vm.provider :libvirt do |libvirt|
+    libvirt.memory = 8192
+    libvirt.cpus = 4
+    libvirt.disk_bus = "sata"
+  end
+config.vm.define :UdemX_HW_automated do |foo|
+#
+end
+config.vm.hostname = "UdemX_HW_automated"
+  # Resize disk and change SSH port (pre-Ansible)
+  config.vm.provision "shell", inline: <<-SHELL
+    set -euxi
+    sed -i 's/^#Port 22/Port 10022/' /etc/ssh/sshd_config
+    fdisk -l
+    ls -la /vagrant
+    systemctl restart sshd
+  SHELL
+  #config.ssh.port = 10022
+
+  # Host-based Ansible provisioning
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "playbook.yml"
+    ansible.compatibility_mode = "2.0"
+    ansible.limit = "all"
+    ansible.verbose = "v"
+    ansible.host_vars = {
+       "UdemX_HW_automated" => {
+          "ansible_port" => 10022
+        }
+     } 
+  end
+end
+

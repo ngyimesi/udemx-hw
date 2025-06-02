@@ -1,0 +1,18 @@
+---
+- name: Full system bootstrap
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install essential tools
+      apt:
+        name: [curl, htop, vim, net-tools]
+        state: present
+        update_cache: yes
+
+    - name: Create application directory
+      file:
+        path: /srv/app
+        state: directory
+        mode: '0755'
+
