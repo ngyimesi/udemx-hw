@@ -3,3 +3,4 @@ secret/*
 .idea/*
 jenkins/agent-key*
 jenkins/home/*
+demo-project/node-modules
